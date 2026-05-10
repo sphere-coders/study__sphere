@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Study Sphere | Grade 7 & 8 Learning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body.light-mode {
+            --bg-body: #f0f4ff;
+            --bg-surface: #ffffff;
+            --bg-elevated: #f8fafc;
+            --text-main: #0f172a;
+            --text-soft: #334155;
+            --border-light: #e2e8f0;
+            --card-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);
+            --accent: #4f46e5;
+            --accent2: #818cf8;
+            --accent3: #f59e0b;
+            --header-bg: #ffffffcc;
+        }
+        
+        body.dark-mode {
+            --bg-body: #0b1120;
+            --bg-surface: #1e293b;
+            --bg-elevated: #0f172a;
+            --text-main: #f1f5f9;
+            --text-soft: #cbd5e1;
+            --border-light: #334155;
+            --card-shadow: 0 10px 20px -5px rgba(0,0,0,0.5);
+            --accent: #818cf8;
+            --accent2: #a78bfa;
+            --accent3: #fbbf24;
+            --header-bg: #1e293bcc;
+        }
+        
+        body {
+            font-family: 'Inter', 'Nunito', sans-serif;
+            background: var(--bg-body);
+            color: var(--text-main);
+            transition: background 0.3s ease;
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1440px; margin: 0 auto; padding: 24px; }
+        
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 32px; border-radius: 20px; margin-bottom: 32px;
+            background: var(--header-bg); backdrop-filter: blur(12px);
+            border: 1px solid var(--border-light); flex-wrap: wrap; gap: 15px;
+        }
+        .logo h1 { font-size: 1.8rem; font-weight: 800; background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 8px; background: var(--bg-elevated); padding: 4px; border-radius: 40px; }
+        .nav-btn {
+            background: transparent; color: var(--text-main); border: none;
+            padding: 10px 24px; border-radius: 32px; cursor: pointer; font-weight: 500;
+        }
+        .nav-btn.active { background: var(--accent); color: white; }
+        .register-btn, .logout-btn, .submit-plan {
+            background: var(--accent); color: white; border: none;
+            padding: 10px 28px; border-radius: 40px; cursor: pointer; font-weight: 600;
+        }
+        .user-info {
+            display: flex; gap: 16px; align-items: center;
+            background: var(--bg-elevated); padding: 6px 20px; border-radius: 40px;
+            flex-wrap: wrap;
+        }
+        .status-bar { display: flex; gap: 12px; align-items: center; margin-left: 15px; flex-wrap: wrap; }
+        .status-btn {
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            padding: 6px 14px; border-radius: 25px; cursor: pointer; font-size: 0.8rem;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .streak-display { font-weight: 600; background: linear-gradient(135deg, #fbbf24, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .hero {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 28px; padding: 60px 48px; text-align: center; margin-bottom: 40px;
+            color: white;
+        }
+        .hero h2 { font-size: 2.8rem; font-family: 'Orbitron', monospace; }
+        .cta-button { background: white; color: var(--accent); padding: 14px 40px; border: none; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 40px; }
+        .feature-card {
+            background: var(--bg-surface); border: 1px solid var(--border-light);
+            padding: 28px 24px; border-radius: 20px; text-align: center;
+        }
+        .feature-icon { font-size: 3rem; margin-bottom: 16px; color: var(--accent); }
+        
+        .content-area {
+            background: var(--bg-surface); border-radius: 28px; padding: 32px;
+            border: 1px solid var(--border-light);
+        }
+        
+        .subjects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin-top: 20px; }
+        @media (max-width: 900px) { .subjects-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 600px) { .subjects-grid { grid-template-columns: 1fr; } }
+        
+        .subject-card {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 24px; cursor: pointer; transition: all 0.3s ease;
+            min-height: 200px; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; text-align: center;
+            padding: 30px 20px; color: white;
+        }
+        .subject-card:hover { transform: translateY(-8px); }
+        .subject-icon { font-size: 3.5rem; margin-bottom: 15px; }
+        .subject-title { font-size: 1.3rem; font-weight: 700; }
+        
+        .resource-buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .resource-action-card {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+        .resource-action-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .resource-icon { font-size: 2.8rem; margin-bottom: 12px; color: var(--accent); }
+        .back-btn {
+            background: #6b7280; color: white; border: none;
+            padding: 10px 24px; border-radius: 40px; cursor: pointer; margin-bottom: 20px;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        
+        .planner-container { background: var(--bg-surface); border-radius: 24px; padding: 25px; }
+        .planner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; margin: 20px 0; }
+        .plan-card {
+            background: var(--bg-elevated); border: 1px solid var(--border-light);
+            padding: 20px; border-radius: 16px; border-left: 4px solid #10b981;
+            position: relative;
+        }
+        .delete-plan {
+            position: absolute; top: 12px; right: 12px; background: #ef4444;
+            color: white; border: none; border-radius: 50%; width: 28px; height: 28px;
+            cursor: pointer;
+        }
+        .add-plan-form {
+            background: var(--bg-elevated); border: 1px solid var(--border-light);
+            padding: 25px; border-radius: 20px; margin-top: 20px;
+        }
+        .form-group input {
+            width: 100%; padding: 12px; border: 1px solid var(--border-light);
+            border-radius: 10px; background: var(--bg-surface); color: var(--text-main);
+        }
+        
+        .game-locked {
+            background: var(--bg-elevated); border: 2px dashed var(--border-light);
+            padding: 40px; text-align: center; border-radius: 20px;
+        }
+        .game-active {
+            background: var(--bg-elevated); padding: 25px; border-radius: 20px;
+        }
+        .game-buttons { display: flex; gap: 12px; flex-wrap: wrap; margin: 20px 0; }
+        .game-btn {
+            background: #10b981; color: white; border: none;
+            padding: 10px 20px; border-radius: 40px; cursor: pointer;
+        }
+        .game-btn:hover { background: #059669; }
+        .quiz-question {
+            margin: 20px 0; padding: 20px; background: var(--bg-surface);
+            border-radius: 16px; border: 1px solid var(--border-light);
+        }
+        .quiz-option {
+            display: block; margin: 10px 0; padding: 12px;
+            background: var(--bg-elevated); border: 1px solid var(--border-light);
+            border-radius: 10px; cursor: pointer;
+        }
+        .quiz-option:hover { background: var(--accent); color: white; }
+        .quiz-option.selected { background: var(--accent); color: white; }
+        
+        .footer {
+            margin-top: 40px; background: var(--bg-elevated); padding: 40px;
+            border-radius: 24px; display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px;
+        }
+        .qr-code { width: 100px; height: 100px; background: white; margin: 10px auto; border-radius: 12px; padding: 5px; }
+        
+        .modal {
+            display: none; position: fixed; top: 0; left: 0;
+            width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px); justify-content: center;
+            align-items: center; z-index: 1000;
+        }
+        .modal-content {
+            background: var(--bg-surface); padding: 32px; border-radius: 24px;
+            width: 420px; max-width: 90%;
+        }
+        .modal-content input, .modal-content select {
+            width: 100%; padding: 12px; margin: 10px 0;
+            border: 1px solid var(--border-light); border-radius: 10px;
+            background: var(--bg-elevated);
+        }
+        .grade-badge { background: var(--accent3); color: #1f2937; border-radius: 20px; padding: 4px 12px; font-size: 0.75rem; display: inline-block; margin-left: 10px; }
+        
+        .quote-notification {
+            position: fixed; bottom: 30px; right: 20px; max-width: 380px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white; padding: 18px 22px; border-radius: 20px;
+            z-index: 10001; animation: slideIn 0.5s ease;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        
+        @media (max-width: 768px) { .header { flex-direction: column; } .hero h2 { font-size: 1.8rem; } }
+    </style>
+</head>
+<body class="light-mode">
+<div class="container">
+    <div class="header">
+        <div class="logo"><h1><i class="fas fa-graduation-cap"></i> Study Sphere</h1><p>Ethiopian Grade 7 & 8 Learning Platform</p></div>
+        <div class="nav-links" id="navLinks" style="display:none;">
+            <button class="nav-btn active" onclick="showPage('home')"><i class="fas fa-home"></i> Home</button>
+            <button class="nav-btn" onclick="showPage('subjects')"><i class="fas fa-book"></i> Subjects</button>
+            <button class="nav-btn" onclick="showPage('planner')"><i class="fas fa-calendar"></i> Planner</button>
+            <button class="nav-btn" onclick="showPage('games')"><i class="fas fa-gamepad"></i> Games</button>
+        </div>
+        <div id="authSection"><button class="register-btn" onclick="openRegisterModal()"><i class="fas fa-user-plus"></i> Register Now</button></div>
+        <div id="userPanel" style="display:none;">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="userNameDisplay"></span>
+                <div class="status-bar">
+                    <span id="streakDisplay" class="streak-display"><i class="fas fa-fire"></i> 0 day streak</span>
+                    <button id="quotesToggleBtn" class="status-btn"><i class="fas fa-lightbulb"></i> Quotes ON</button>
+                    <button id="darkModeToggleBtn" class="status-btn"><i class="fas fa-moon"></i> Dark Mode</button>
+                </div>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="homePage">
+        <div class="hero"><h2>✨ Welcome to Study Sphere ✨</h2><p>Grade 7 & 8 - Ethiopian Curriculum | Study Smart, Play Rewarded!</p><button class="cta-button" onclick="openRegisterModal()"><i class="fas fa-rocket"></i> Get Started</button></div>
+        <div class="features">
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-language"></i></div><h3>6 Subjects</h3><p>Amharic, English, Maths, Science, Social, Citizenship</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-video"></i></div><h3>Grade-Specific Resources</h3><p>Textbooks, Videos, Notes & Worksheets for Grade 7 & 8</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-clock"></i></div><h3>Smart Planner</h3><p>Plan with Alarms | Study 1h = 30min Games</p></div>
+            <div class="feature-card"><div class="feature-icon"><i class="fas fa-brain"></i></div><h3>100+ Questions Games</h3><p>Auto-next after viewing correct answer</p></div>
+        </div>
+        <div class="content-area"><div id="guestMessage" style="text-align:center; padding:60px 20px;"><h3><i class="fas fa-hand-wave"></i> Welcome!</h3><p>Register to access learning materials for Grade 7 & 8, smart planner, and brain games!</p><button class="cta-button" onclick="openRegisterModal()">Register Now</button></div></div>
+    </div>
+
+    <div id="subjectsPage" style="display:none;"><div class="content-area"><div id="gradeDisplay" style="margin-bottom:20px; font-weight:600;"></div><div class="subjects-grid" id="subjectsGrid"></div><div id="subjectResourcesView" style="display:none;"><button class="back-btn" onclick="backToSubjectsList()"><i class="fas fa-arrow-left"></i> All Subjects</button><div id="selectedSubjectTitle" style="margin-bottom:20px; font-size:1.8rem; font-weight:700;"></div><div id="resourcesContainer"></div></div></div></div>
+    <div id="plannerPage" style="display:none;"><div class="planner-container"><h2><i class="fas fa-calendar-alt"></i> My Study Planner</h2><div class="planner-grid" id="plannerGrid"></div><div class="add-plan-form"><h3>📌 Plan New Session</h3><div class="form-group"><label>Title</label><input type="text" id="planTitle" placeholder="e.g., Maths Chapter 3"></div><div class="form-group"><label>Start Time</label><input type="time" id="planStart"></div><div class="form-group"><label>End Time</label><input type="time" id="planEnd"></div><button class="submit-plan" onclick="addStudyPlan()"><i class="fas fa-plus"></i> Add to Planner</button></div></div></div>
+    <div id="gamesPage" style="display:none;"><div class="content-area"><h2><i class="fas fa-gamepad"></i> Break Time Games</h2><div id="gameStatus"></div></div></div>
+
+    <div class="footer">
+    <div class="footer-section"><h4><i class="fas fa-envelope"></i> Contact</h4><p><i class="fas fa-phone"></i> +251 900 499 654 &nbsp; <i class="fas fa-envelope"></i> support@studysphere.com &nbsp; <a href="https://t.me/studysphere123" target="_blank"><i class="fab fa-telegram"></i> @studysphere123</a></p></div>
+        <div class="footer-section"><h4><i class="fas fa-info-circle"></i> About</h4><p>Empowering Ethiopian Grade 7 & 8 students with quality resources and games.</p></div>
+        <div class="footer-section"><h4><i class="fas fa-qrcode"></i> QR Code</h4><div id="contactQR" class="qr-code"></div></div>
+    </div>
+</div>
+
+<div id="registerModal" class="modal"><div class="modal-content"><h3>Create Account</h3><input type="text" id="regEmail" placeholder="Email"><input type="password" id="regPassword" placeholder="Password"><select id="regGender"><option value="female">Female</option><option value="male">Male</option></select><select id="regGrade"><option value="7">Grade 7</option><option value="8">Grade 8</option></select><div class="modal-buttons" style="display:flex; gap:10px; margin-top:20px;"><button onclick="register()" style="flex:1; padding:12px; background:var(--accent); color:white; border:none; border-radius:10px;">Register</button><button onclick="closeRegisterModal()" style="flex:1; padding:12px; background:#6b7280; color:white; border:none; border-radius:10px;">Cancel</button></div></div></div>
+
+<script>
+    let currentUser = null;
+    let studyPlans = [];
+    let gameUnlockUntil = 0;
+    let studyStreak = 0;
+    let lastStudyDate = null;
+    let quotesEnabled = true;
+    let quoteInterval = null;
+    
+    // Game state
+    let currentGameQuestions = [];
+    let currentGameIndex = 0;
+    let selectedAnswer = null;
+    let isWaitingForNext = false;
+    let currentFlashcardIndex = 0;
+    let currentMemoryWordIndex = 0;
+    let memoryTimerInterval = null;
+    
+    // ==================== MOTIVATIONAL QUOTES ====================
+    const motivationalQuotes = [
+        { text: "The future depends on what you do today.", author: "Mahatma Gandhi" },
+        { text: "Education is the most powerful weapon.", author: "Nelson Mandela" },
+        { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" }
+    ];
+    
+    function showQuote() {
+        if(!quotesEnabled || !currentUser) return;
+        const q = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
+        const notification = document.createElement('div');
+        notification.className = 'quote-notification';
+        notification.innerHTML = `<div><i class="fas fa-quote-right"></i></div><div>"${q.text}"<br><small>— ${q.author}</small></div><button onclick="this.parentElement.remove()" style="background:none;border:none;color:white;cursor:pointer;margin-left:10px;">✖</button>`;
+        document.body.appendChild(notification);
+        setTimeout(() => { if(notification.parentElement) notification.remove(); }, 8000);
+    }
+    
+    function startQuotes() { if(quoteInterval) clearInterval(quoteInterval); if(quotesEnabled && currentUser) { quoteInterval = setInterval(showQuote, 900000); setTimeout(showQuote, 5000); } }
+    function stopQuotes() { if(quoteInterval) clearInterval(quoteInterval); quoteInterval = null; }
+    function toggleQuotes() { quotesEnabled = !quotesEnabled; const btn = document.getElementById('quotesToggleBtn'); if(btn) btn.innerHTML = quotesEnabled ? '<i class="fas fa-lightbulb"></i> Quotes ON' : '<i class="fas fa-lightbulb-off"></i> Quotes OFF'; if(quotesEnabled) startQuotes(); else stopQuotes(); localStorage.setItem('quotesEnabled', quotesEnabled); }
+    
+    // ==================== 100 QUESTIONS ====================
+    function generateGKQuestions() {
+        let qs = [];
+        for(let i=1; i<=100; i++) {
+            if(i<=20) qs.push({q: "What is the capital of Ethiopia?", a: "Addis Ababa", options: ["Addis Ababa", "Nairobi", "Cairo", "Khartoum"]});
+            else if(i<=40) qs.push({q: "Which planet is known as the Red Planet?", a: "Mars", options: ["Jupiter", "Mars", "Venus", "Saturn"]});
+            else if(i<=60) qs.push({q: "What is the longest river in Africa?", a: "Nile", options: ["Nile", "Congo", "Niger", "Zambezi"]});
+            else if(i<=80) qs.push({q: "Who is known as the Father of Modern Ethiopia?", a: "Menelik II", options: ["Tewodros II", "Yohannes IV", "Menelik II", "Haile Selassie"]});
+            else qs.push({q: "What is the largest ocean on Earth?", a: "Pacific", options: ["Atlantic", "Indian", "Arctic", "Pacific"]});
+        }
+        return qs;
+    }
+    
+    function generateMindQuestions() {
+        let qs = [];
+        for(let i=1; i<=100; i++) {
+            if(i<=25) qs.push({q: "What has keys but no locks?", a: "piano", options: ["piano", "door", "keyboard", "chest"]});
+            else if(i<=50) qs.push({q: "What gets wetter as it dries?", a: "towel", options: ["towel", "sponge", "cloth", "paper"]});
+            else if(i<=75) qs.push({q: "What has a face and two hands but no arms?", a: "clock", options: ["clock", "watch", "mirror", "doll"]});
+            else qs.push({q: "What is full of holes but still holds water?", a: "sponge", options: ["sponge", "net", "bucket", "cup"]});
+        }
+        return qs;
+    }
+    
+    function generateMathsQuestions() {
+        let qs = [];
+        for(let i=1; i<=100; i++) {
+            if(i<=20) qs.push({q: "What is 15 + 27?", a: "42", options: ["40", "42", "44", "38"]});
+            else if(i<=40) qs.push({q: "What is 8 × 7?", a: "56", options: ["48", "54", "56", "64"]});
+            else if(i<=60) qs.push({q: "What is 100 ÷ 4?", a: "25", options: ["20", "25", "30", "35"]});
+            else if(i<=80) qs.push({q: "What is 12²?", a: "144", options: ["124", "144", "169", "121"]});
+            else qs.push({q: "What is the area of a circle with radius 5? (π=3.14)", a: "78.5", options: ["78.5", "31.4", "62.8", "157"]});
+        }
+        return qs;
+    }
+    
+    const flashWords = [
+        {word: "Ephemeral", meaning: "Lasting for a very short time"},
+        {word: "Ubiquitous", meaning: "Present everywhere"},
+        {word: "Mellifluous", meaning: "Sweet sounding"},
+        {word: "Serendipity", meaning: "Happy accident"},
+        {word: "Petrichor", meaning: "Smell after rain"},
+        {word: "Effervescent", meaning: "Vivacious"},
+        {word: "Perseverance", meaning: "Persistence in doing something"},
+        {word: "Eloquent", meaning: "Fluent or persuasive speaking"},
+        {word: "Benevolent", meaning: "Well-meaning and kindly"},
+        {word: "Meticulous", meaning: "Showing great attention to detail"}
+    ];
+    
+    const memoryWords = ["Extraordinary", "Incomprehensibility", "Counterrevolution", "Electroencephalograph", "Antidisestablishment"];
+    
+    // ==================== QUIZ GAMES WITH AUTO-NEXT ====================
+    function startGame(type) {
+        if((gameUnlockUntil - Date.now()) <= 0 && type !== 'flash' && type !== 'memory') {
+            alert("⏰ No game time! Complete a study session first!");
+            return;
+        }
+        if(memoryTimerInterval) clearInterval(memoryTimerInterval);
+        if(type === 'gk') currentGameQuestions = generateGKQuestions();
+        else if(type === 'mind') currentGameQuestions = generateMindQuestions();
+        else if(type === 'math') currentGameQuestions = generateMathsQuestions();
+        else if(type === 'flash') { startFlashcardGame(); return; }
+        else if(type === 'memory') { startMemoryGame(); return; }
+        currentGameIndex = 0;
+        isWaitingForNext = false;
+        displayCurrentQuestion();
+    }
+    
+    function displayCurrentQuestion() {
+        if(currentGameIndex >= currentGameQuestions.length) {
+            document.getElementById("gamePlayArea").innerHTML = `<div style="padding:25px; background:#10b981; color:white; border-radius:16px; text-align:center;"><i class="fas fa-trophy"></i> 🎉 Completed all 100 questions! 🎉</div>`;
+            return;
+        }
+        const q = currentGameQuestions[currentGameIndex];
+        const optionsHtml = q.options.map((opt) => `<div class="quiz-option" onclick="selectAnswer('${opt.replace(/'/g, "\\'")}')">${opt}</div>`).join('');
+        document.getElementById("gamePlayArea").innerHTML = `
+            <div class="quiz-question">
+                <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                    <span><i class="fas fa-question-circle"></i> Q${currentGameIndex+1}/${currentGameQuestions.length}</span>
+                    <span><i class="fas fa-star"></i> ${currentGameQuestions === generateGKQuestions() ? 'GK' : (currentGameQuestions === generateMindQuestions() ? 'Mind Test' : 'Maths')}</span>
+                </div>
+                <h3 style="margin-bottom:20px;">${q.q}</h3>
+                ${optionsHtml}
+                <button class="game-btn" style="margin-top:20px;" onclick="submitAnswer()">Submit Answer</button>
+                <div id="gameFeedback" style="margin-top:15px;"></div>
+            </div>
+        `;
+        selectedAnswer = null;
+        isWaitingForNext = false;
+    }
+    
+    function selectAnswer(ans) { if(isWaitingForNext) return; selectedAnswer = ans; document.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected')); if(event && event.target) event.target.classList.add('selected'); }
+    
+    function submitAnswer() {
+        if(isWaitingForNext) return;
+        if(!selectedAnswer) { document.getElementById("gameFeedback").innerHTML = "<span style='color:#f97316;'>⚠️ Select an answer!</span>"; return; }
+        const currentQ = currentGameQuestions[currentGameIndex];
+        const isCorrect = (selectedAnswer.toLowerCase() === currentQ.a.toLowerCase());
+        if(gameUnlockUntil > Date.now()) { gameUnlockUntil = Math.max(Date.now(), gameUnlockUntil - 60000); updateGameUI(); }
+        document.getElementById("gameFeedback").innerHTML = isCorrect ? `<span style='color:#10b981;'>✅ Correct! Answer: ${currentQ.a}</span>` : `<span style='color:#ef4444;'>❌ Wrong! Answer: ${currentQ.a}</span>`;
+        isWaitingForNext = true;
+        setTimeout(() => { currentGameIndex++; displayCurrentQuestion(); }, 1500);
+    }
+    
+    // ==================== FLASHCARD - AUTO NEXT ====================
+    function startFlashcardGame() { currentFlashcardIndex = 0; displayFlashcard(); }
+    
+    function displayFlashcard() {
+        let card = flashWords[currentFlashcardIndex % flashWords.length];
+        document.getElementById("gamePlayArea").innerHTML = `
+            <div class="quiz-question">
+                <h3><i class="fas fa-layer-group"></i> Flashcard ${(currentFlashcardIndex % flashWords.length)+1}/${flashWords.length}</h3>
+                <p style="font-size:1.8rem; font-weight:bold; margin:20px 0; text-align:center;">${card.word}</p>
+                <input type="text" id="flashAnswerInput" placeholder="Type the meaning..." style="width:100%; padding:12px; border-radius:10px;">
+                <button class="game-btn" style="margin-top:10px;" onclick="submitFlashcard()">Submit</button>
+                <div id="flashFeedback" style="margin-top:15px;"></div>
+            </div>
+        `;
+        isWaitingForNext = false;
+    }
+    
+    function submitFlashcard() {
+        if(isWaitingForNext) return;
+        let answer = document.getElementById("flashAnswerInput")?.value.trim().toLowerCase();
+        let card = flashWords[currentFlashcardIndex % flashWords.length];
+        if(!answer) { document.getElementById("flashFeedback").innerHTML = "<span style='color:#f97316;'>Type an answer!</span>"; return; }
+        if(answer === card.meaning.toLowerCase()) {
+            document.getElementById("flashFeedback").innerHTML = "<span style='color:#10b981;'>✅ Correct!</span>";
+            if(gameUnlockUntil > Date.now()) gameUnlockUntil = Math.max(Date.now(), gameUnlockUntil - 60000);
+            updateGameUI();
+        } else {
+            document.getElementById("flashFeedback").innerHTML = `<span style='color:#ef4444;'>❌ Meaning: "${card.meaning}"</span>`;
+        }
+        isWaitingForNext = true;
+        setTimeout(() => { currentFlashcardIndex++; displayFlashcard(); }, 1800);
+    }
+    
+    // ==================== MEMORY GAME - AUTO NEXT ====================
+    function startMemoryGame() { currentMemoryWordIndex = 0; displayMemoryCard(); }
+    
+    function displayMemoryCard() {
+        let targetWord = memoryWords[currentMemoryWordIndex % memoryWords.length];
+        document.getElementById("gamePlayArea").innerHTML = `
+            <div class="quiz-question">
+                <h3><i class="fas fa-dice"></i> Memory Game</h3>
+                <div id="wordDisplay" style="font-size:2rem; font-weight:800; padding:30px; text-align:center; margin:20px 0; border-radius:16px; background:linear-gradient(135deg, var(--accent), var(--accent2)); color:white;">${targetWord}</div>
+                <p id="countdownTimer" style="text-align:center;">⏱️ 5 seconds to memorize...</p>
+                <div id="answerArea" style="display:none; margin-top:20px;">
+                    <input type="text" id="memoryAnswer" placeholder="Type the word" style="width:100%; padding:12px; border-radius:10px;">
+                    <button id="memorySubmit" class="game-btn" style="margin-top:10px;">Submit</button>
+                </div>
+                <div id="memoryFeedback" style="margin-top:15px;"></div>
+            </div>
+        `;
+        let timeLeft = 5;
+        if(memoryTimerInterval) clearInterval(memoryTimerInterval);
+        memoryTimerInterval = setInterval(() => {
+            timeLeft--;
+            let timer = document.getElementById("countdownTimer");
+            if(timer) timer.innerText = `⏱️ ${timeLeft} seconds remaining...`;
+            if(timeLeft <= 0) {
+                clearInterval(memoryTimerInterval);
+                let wordDiv = document.getElementById("wordDisplay");
+                if(wordDiv) { wordDiv.style.opacity = "0"; setTimeout(() => { if(wordDiv) wordDiv.innerHTML = "❓ Word Hidden! ❓"; wordDiv.style.opacity = "1"; }, 300); }
+                let answerArea = document.getElementById("answerArea");
+                if(answerArea) answerArea.style.display = "block";
+                let submitBtn = document.getElementById("memorySubmit");
+                if(submitBtn) {
+                    submitBtn.onclick = () => {
+                        if(isWaitingForNext) return;
+                        let userWord = document.getElementById("memoryAnswer").value.trim().toLowerCase();
+                        let correctWord = memoryWords[currentMemoryWordIndex % memoryWords.length].toLowerCase();
+                        let fb = document.getElementById("memoryFeedback");
+                        if(userWord === correctWord) {
+                            fb.innerHTML = "<span style='color:#10b981;'>✅ Correct! Great memory!</span>";
+                            if(gameUnlockUntil > Date.now()) gameUnlockUntil = Math.max(Date.now(), gameUnlockUntil - 60000);
+                            updateGameUI();
+                        } else {
+                            fb.innerHTML = `<span style='color:#ef4444;'>❌ Wrong! The word was: "${correctWord}"</span>`;
+                        }
+                        isWaitingForNext = true;
+                        setTimeout(() => { currentMemoryWordIndex++; displayMemoryCard(); }, 2000);
+                    };
+                }
+            }
+        }, 1000);
+        isWaitingForNext = false;
+    }
+    
+    // ==================== GRADE-SPECIFIC SAMPLE LINKS (ALL SUBJECTS) ====================
+    const subjectsList = ["Amharic", "English", "Maths", "General Science", "Social Study", "Citizenship"];
+    const subjectIcons = ["fas fa-language", "fas fa-book-open", "fas fa-calculator", "fas fa-flask", "fas fa-globe-africa", "fas fa-handshake"];
+    
+    function getSampleLink(grade, subject, type) {
+        const subSlug = subject.toLowerCase().replace(/ /g, "");
+        // Grade 7 Maths special PDF
+        if(grade === 7 && subject === "Maths" && type === "textbook") return "Pdfs/grade7/Grade%207_Mathematics_Textbook.pdf";
+        
+     const links = {
+            7: {
+                Amharic: { textbook: "pdf/grade7/amharic.textbook.pdf.pdf", video: "https://youtu.be/wY4PmkrY06Y?si=3oz1RwpLeX8zvq5E", shortnote: "https://www.ethiofetena.com/grade-7-amharic-notes.pdf", worksheet: "https://www.ethiofetena.com/grade-7-amharic-worksheet.pdf" },
+                English: { textbook: "pdf/grade7/english.textbook.pdf.pdf", video: "https://youtube.com/playlist?list=PLi0JpWsJzI9Ig4KTnxIJh8KH8cuakwHK3&si=m9p_ZfHuwIY6gAB4", shortnote: "https://www.ethiofetena.com/grade-7-english-notes.pdf", worksheet: "https://www.ethiofetena.com/grade-7-english-worksheet.pdf" },
+                Maths: { textbook: "pdf/grade7/mathematics.textbook.pdf.pdf", video: "https://youtu.be/f6qtZgFFt68?si=yXmHGu6FjC8g0N-v", shortnote: "https://www.ethiofetena.com/grade-7-mathematics-notes.pdf", worksheet: "https://www.ethiofetena.com/grade-7-mathematics-worksheet.pdf" },
+                "General Science": { textbook: "pdf/grade7/generalscience.textbook.pdf.pdf", video: "https://youtu.be/IW9rlsvkLzU?si=nPTzt3gTM5951c_R", shortnote: "https://www.ethiofetena.com/grade-7-science-notes.pdf", worksheet: "https://www.ethiofetena.com/grade-7-science-worksheet.pdf" },
+                "Social Study": { textbook: "pdf/grade7/socialstudy.textbook.pdf.pdf", video: "https://youtu.be/tynwk-VXcwE?si=VVH0wmS5ywo4SS0B", shortnote: "https://www.ethiofetena.com/grade-7-social-notes.pdf", worksheet: "https://www.ethiofetena.com/grade-7-social-worksheet.pdf" },
+                Citizenship: { textbook: "pdf/grade7/citzenship.textbook.pdf.pdf", video: "https://youtu.be/WfCVmQriAsM?si=CXoIVx3pKK6fL01I", shortnote: "https://www.ethiofetena.com/grade-7-civics-notes.pdf", worksheet: "https://www.ethiofetena.com/grade-7-civics-worksheet.pdf" }
+            },
+            8: {
+                Amharic: { textbook: "pdf/grade8/amharic.textbook.pdf.pdf", video: "https://youtu.be/F5JVbkaWveM?si=X7OeDbisBe6z_P7C", shortnote: "https://www.ethiofetena.com/grade-8-amharic-notes.pdf", worksheet: "pdf/grade8/amharic.worksheet.pdf.pdf" },
+                English: { textbook: "pdf/grade8/english.textbook.pdf.pdf", video: "https://youtu.be/cRuPy1aIkt0?si=F7hglxx2dBLZoJ5Y", shortnote: "https://www.ethiofetena.com/grade-8-english-notes.pdf", worksheet: "pdf/grade8/english.worksheet.pdf.pdf" },
+                Maths: { textbook: "pdf/grade8/mathematics.textbook.pdf.pdf", video: "https://youtu.be/VIzB57Eqez4?si=zFDTt_MLGgo30eni", shortnote: "https://www.ethiofetena.com/grade-8-mathematics-notes.pdf", worksheet: "pdf/grade8/maths.worksheet.pdf.pdf" },
+                "General Science": { textbook: "pdf/grade8/generalscience.textbook.pdf.pdf", video: "https://youtu.be/MhdojvzC3IQ?si=8fOJI7oVbntmsn16", shortnote: "https://www.ethiofetena.com/grade-8-science-notes.pdf", worksheet: "pdf/grade8/generalscience.worksheet.pdf.pdf" },
+                "Social Study": { textbook: "pdf/grade8/socialstudy.textbook.pdf.pdf", video: "https://youtu.be/_ILtAhlckkg?si=5_SrnCawlg9XHFCf", shortnote: "https://www.ethiofetena.com/grade-8-social-notes.pdf", worksheet: "pdf/grade8/socialstudy.worksheet.pdf.pdf" },
+                Citizenship: { textbook: "pdf/grade8/citzenship.textbook.pdf.pdf", video: "https://youtu.be/6nW6ejjfj1A?si=2mDdAr6Ab-KQxlMj", shortnote: "https://www.ethiofetena.com/grade-8-civics-notes.pdf", worksheet: "pdf/grade8/citzenzhip.worksheet.pdf.pdf" }
+            }
+        };
+        return links[grade]?.[subject]?.[type] || `https://www.ethiofetena.com/grade-${grade}/${subSlug}-${type}.pdf`;
+    }
+    
+    function renderSubjects() {
+        let html = '';
+        for(let i=0; i<subjectsList.length; i++) {
+            html += `<div class="subject-card" onclick="showSubjectResources('${subjectsList[i]}')"><div class="subject-icon"><i class="${subjectIcons[i]}"></i></div><div class="subject-title">${subjectsList[i]}</div></div>`;
+        }
+        document.getElementById("subjectsGrid").innerHTML = html;
+        document.getElementById("subjectsGrid").style.display = "grid";
+        document.getElementById("subjectResourcesView").style.display = "none";
+    }
+    
+    function showSubjectResources(subject) {
+        const grade = currentUser.grade;
+        document.getElementById("selectedSubjectTitle").innerHTML = `<i class="fas fa-chalkboard-teacher"></i> ${subject} - Grade ${grade} <span class="grade-badge">Grade ${grade} Resources</span>`;
+        
+        const resources = [
+            { type: 'textbook', icon: 'fas fa-book', name: '📘 Textbook PDF', desc: 'Full official textbook' },
+            { type: 'video', icon: 'fas fa-video', name: '🎥 Video Lessons', desc: 'Educational video playlist' },
+            { type: 'shortnote', icon: 'fas fa-sticky-note', name: '📝 Short Notes', desc: 'Key summary notes' },
+            { type: 'worksheet', icon: 'fas fa-tasks', name: '📄 Worksheets', desc: 'Practice questions' }
+        ];
+        
+        let buttonsHtml = `<div class="resource-buttons-grid">`;
+        resources.forEach(res => {
+            const url = getSampleLink(grade, subject, res.type);
+            buttonsHtml += `
+                <div class="resource-action-card" onclick="window.open('${url}', '_blank')">
+                    <div class="resource-icon"><i class="${res.icon}"></i></div>
+                    <h3>${res.name}</h3>
+                    <p>${res.desc}</p>
+                    <small style="color:var(--accent3);"><i class="fas fa-external-link-alt"></i> ${subject === "Maths" && res.type === 'textbook' && grade === 7 ? 'Local PDF' : 'Open Resource'}</small>
+                </div>
+            `;
+        });
+        buttonsHtml += `</div>`;
+        document.getElementById("resourcesContainer").innerHTML = buttonsHtml;
+        document.getElementById("subjectsGrid").style.display = "none";
+        document.getElementById("subjectResourcesView").style.display = "block";
+    }
+    
+    function backToSubjectsList() { document.getElementById("subjectResourcesView").style.display = "none"; document.getElementById("subjectsGrid").style.display = "grid"; }
+    
+    // ==================== PLANNER & UTILITIES ====================
+    function updateGameUI() {
+        let remaining = Math.max(0, Math.floor((gameUnlockUntil - Date.now())/60000));
+        let active = remaining > 0;
+        let container = document.getElementById("gameStatus");
+        if(!container) return;
+        if(!currentUser) { container.innerHTML = '<div class="game-locked">Register to play games!</div>'; return; }
+        if(!active) container.innerHTML = `<div class="game-locked"><i class="fas fa-lock"></i> 🔒 Games Locked<br><small>Complete a study session to unlock!</small></div>`;
+        else container.innerHTML = `<div class="game-active"><strong>✅ Games Active for ${remaining} more minutes!</strong><div class="game-buttons"><button class="game-btn" onclick="startGame('gk')"><i class="fas fa-globe"></i> GK (100 Qs)</button><button class="game-btn" onclick="startGame('mind')"><i class="fas fa-brain"></i> Mind Test (100 Qs)</button><button class="game-btn" onclick="startGame('math')"><i class="fas fa-calculator"></i> Maths (100 Qs)</button><button class="game-btn" onclick="startGame('flash')"><i class="fas fa-layer-group"></i> Flashcards</button><button class="game-btn" onclick="startGame('memory')"><i class="fas fa-dice"></i> Memory Game</button></div><div id="gamePlayArea"></div><p style="margin-top:10px; font-size:0.8rem;"><i class="fas fa-arrow-right"></i> After submitting, answer shown → Next question appears automatically in 1.5s</p></div>`;
+    }
+    
+    function playAlarm() { let audio = new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"); audio.play().catch(e=>console.log); }
+    function scheduleAlarm(plan) { const now = new Date(); let [sh,sm] = plan.startTime.split(":").map(Number); let [eh,em] = plan.endTime.split(":").map(Number); let startTime = new Date(); startTime.setHours(sh,sm,0); let endTime = new Date(); endTime.setHours(eh,em,0); let toStart = startTime - now, toEnd = endTime - now; if(toStart > 0) setTimeout(() => { playAlarm(); alert(`🔔 STUDY START: ${plan.title}!`); }, toStart); if(toEnd > 0) setTimeout(() => { playAlarm(); let gameTime = Math.floor(plan.durationMinutes * 0.5); gameUnlockUntil = Date.now() + (gameTime * 60000); updateStreak(); alert(`🎉 Complete! ${gameTime} mins game time unlocked!`); updateGameUI(); }, toEnd); }
+    function updateStreak() { const today = new Date().toDateString(); if(lastStudyDate !== today) { const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1); if(lastStudyDate === yesterday.toDateString()) studyStreak++; else studyStreak = 1; lastStudyDate = today; localStorage.setItem('streak', studyStreak); localStorage.setItem('lastStudyDate', lastStudyDate); } const el = document.getElementById('streakDisplay'); if(el) el.innerHTML = `<i class="fas fa-fire"></i> ${studyStreak} day streak`; }
+    function renderPlanner() { let html = ""; studyPlans.forEach((p,i) => { html += `<div class="plan-card"><button class="delete-plan" onclick="removePlan(${i})">✖</button><div class="plan-title">${p.title}</div><div>🕐 ${p.startTime} → ${p.endTime}</div><div>⏱️ ${p.durationMinutes} min</div></div>`; }); document.getElementById("plannerGrid").innerHTML = html || "<div style='padding:40px;text-align:center;'>No plans. Add one above!</div>"; }
+    function addStudyPlan() { let title = document.getElementById("planTitle").value, start = document.getElementById("planStart").value, end = document.getElementById("planEnd").value; if(!title || !start || !end) { alert("Fill all fields"); return; } let [sh,sm] = start.split(":").map(Number), [eh,em] = end.split(":").map(Number); let duration = ((new Date().setHours(eh,em) - new Date().setHours(sh,sm))/60000); if(duration <= 0) { alert("End time must be after start"); return; } let plan = { id: Date.now(), title, startTime: start, endTime: end, durationMinutes: Math.floor(duration) }; studyPlans.push(plan); scheduleAlarm(plan); renderPlanner(); document.getElementById("planTitle").value = ""; document.getElementById("planStart").value = ""; document.getElementById("planEnd").value = ""; if(currentUser) localStorage.setItem(`plans_${currentUser.email}`, JSON.stringify(studyPlans)); alert(`✅ Plan added!`); }
+    function removePlan(i) { studyPlans.splice(i,1); renderPlanner(); if(currentUser) localStorage.setItem(`plans_${currentUser.email}`, JSON.stringify(studyPlans)); }
+    
+    function showPage(page) {
+        document.getElementById("homePage").style.display = "none"; document.getElementById("subjectsPage").style.display = "none"; document.getElementById("plannerPage").style.display = "none"; document.getElementById("gamesPage").style.display = "none";
+        if(page === 'home') document.getElementById("homePage").style.display = "block";
+        else if(page === 'subjects') { document.getElementById("subjectsPage").style.display = "block"; if(currentUser) renderSubjects(); }
+        else if(page === 'planner') { document.getElementById("plannerPage").style.display = "block"; if(currentUser) renderPlanner(); }
+        else if(page === 'games') { document.getElementById("gamesPage").style.display = "block"; if(currentUser) updateGameUI(); else document.getElementById("gameStatus").innerHTML = '<div class="game-locked">Register to play games!</div>'; }
+        document.querySelectorAll('.nav-btn').forEach((btn,i)=>btn.classList.remove('active'));
+        if(page === 'home') document.querySelectorAll('.nav-btn')[0]?.classList.add('active');
+        else if(page === 'subjects') document.querySelectorAll('.nav-btn')[1]?.classList.add('active');
+        else if(page === 'planner') document.querySelectorAll('.nav-btn')[2]?.classList.add('active');
+        else if(page === 'games') document.querySelectorAll('.nav-btn')[3]?.classList.add('active');
+    }
+    
+    function register() { let email = document.getElementById("regEmail").value; let pwd = document.getElementById("regPassword").value; let grade = document.getElementById("regGrade").value; if(!email || !pwd) { alert("Fill all fields"); return; } currentUser = { email, password: pwd, grade: parseInt(grade) }; let savedPlans = localStorage.getItem(`plans_${email}`); if(savedPlans) studyPlans = JSON.parse(savedPlans); studyStreak = parseInt(localStorage.getItem('streak')) || 0; lastStudyDate = localStorage.getItem('lastStudyDate'); let savedQuotes = localStorage.getItem('quotesEnabled'); if(savedQuotes !== null) quotesEnabled = savedQuotes === 'true'; localStorage.setItem("studySphereUser", JSON.stringify(currentUser)); document.getElementById("authSection").style.display = "none"; document.getElementById("userPanel").style.display = "block"; document.getElementById("navLinks").style.display = "flex"; document.getElementById("userNameDisplay").innerHTML = `<i class="fas fa-user"></i> ${email.split('@')[0]} <span class="grade-badge">Grade ${grade}</span>`; document.getElementById("gradeDisplay").innerHTML = `<i class="fas fa-chalkboard"></i> Grade ${grade} Learning Materials`; document.getElementById("guestMessage").style.display = "none"; document.getElementById("darkModeToggleBtn").onclick = toggleDarkMode; document.getElementById("quotesToggleBtn").onclick = toggleQuotes; document.getElementById("quotesToggleBtn").innerHTML = quotesEnabled ? '<i class="fas fa-lightbulb"></i> Quotes ON' : '<i class="fas fa-lightbulb-off"></i> Quotes OFF'; updateStreak(); if(quotesEnabled) startQuotes(); showPage('subjects'); closeRegisterModal(); alert(`🎉 Welcome ${email.split('@')[0]}!`); }
+    
+    function logout() { if(currentUser) localStorage.setItem(`plans_${currentUser.email}`, JSON.stringify(studyPlans)); currentUser = null; studyPlans = []; localStorage.removeItem("studySphereUser"); stopQuotes(); if(memoryTimerInterval) clearInterval(memoryTimerInterval); document.getElementById("authSection").style.display = "block"; document.getElementById("userPanel").style.display = "none"; document.getElementById("navLinks").style.display = "none"; document.getElementById("guestMessage").style.display = "block"; showPage('home'); }
+    
+    function toggleDarkMode() { const isDark = document.body.classList.contains('dark-mode'); if(isDark) { document.body.classList.remove('dark-mode'); document.body.classList.add('light-mode'); } else { document.body.classList.remove('light-mode'); document.body.classList.add('dark-mode'); } const btn = document.getElementById('darkModeToggleBtn'); if(btn) btn.innerHTML = isDark ? '<i class="fas fa-moon"></i> Dark Mode' : '<i class="fas fa-sun"></i> Light Mode'; localStorage.setItem('theme', isDark ? 'light' : 'dark'); }
+    
+    function loadUser() { let data = localStorage.getItem("studySphereUser"); if(data) { currentUser = JSON.parse(data); let savedPlans = localStorage.getItem(`plans_${currentUser.email}`); if(savedPlans) studyPlans = JSON.parse(savedPlans); studyStreak = parseInt(localStorage.getItem('streak')) || 0; lastStudyDate = localStorage.getItem('lastStudyDate'); let savedQuotes = localStorage.getItem('quotesEnabled'); if(savedQuotes !== null) quotesEnabled = savedQuotes === 'true'; let savedTheme = localStorage.getItem('theme'); if(savedTheme === 'dark') document.body.classList.add('dark-mode'); else document.body.classList.add('light-mode'); document.getElementById("authSection").style.display = "none"; document.getElementById("userPanel").style.display = "block"; document.getElementById("navLinks").style.display = "flex"; document.getElementById("userNameDisplay").innerHTML = `<i class="fas fa-user"></i> ${currentUser.email.split('@')[0]} <span class="grade-badge">Grade ${currentUser.grade}</span>`; document.getElementById("gradeDisplay").innerHTML = `<i class="fas fa-chalkboard"></i> Grade ${currentUser.grade} Learning Materials`; document.getElementById("guestMessage").style.display = "none"; document.getElementById("darkModeToggleBtn").onclick = toggleDarkMode; document.getElementById("quotesToggleBtn").onclick = toggleQuotes; document.getElementById("quotesToggleBtn").innerHTML = quotesEnabled ? '<i class="fas fa-lightbulb"></i> Quotes ON' : '<i class="fas fa-lightbulb-off"></i> Quotes OFF'; updateStreak(); if(quotesEnabled) startQuotes(); showPage('subjects'); } else { document.body.classList.add('light-mode'); } const themeBtn = document.getElementById("darkModeToggleBtn"); if(themeBtn) themeBtn.innerHTML = document.body.classList.contains('dark-mode') ? '<i class="fas fa-sun"></i> Light Mode' : '<i class="fas fa-moon"></i> Dark Mode'; }
+    
+    function openRegisterModal() { document.getElementById("registerModal").style.display = "flex"; }
+    function closeRegisterModal() { document.getElementById("registerModal").style.display = "none"; }
+    
+    setTimeout(() => { if(document.getElementById("contactQR")) new QRCode(document.getElementById("contactQR"), { text: window.location.href, width: 90, height: 90 }); }, 100);
+    loadUser();
+</script>
+</body>
+</html>
